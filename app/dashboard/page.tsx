@@ -108,24 +108,13 @@ export default function DashboardHome() {
   }, [assets, incidents]);
 
   const chartData = useMemo(() => {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const today = new Date().getDay(); // 0 is Sun, 1 is Mon...
+    if (stats.totalTables === 0) return [];
     
-    // Create last 7 days including today
-    return Array.from({ length: 7 }).map((_, i) => {
-      const dayIndex = (today - (6 - i) + 7) % 7;
-      const dayLabel = days[dayIndex === 0 ? 6 : dayIndex - 1]; // Map to our days array
-      
-      // Real data for today (the last point)
-      if (i === 6) return { name: 'Today', score: stats.healthScore };
-      
-      // Simulated data for previous days (75-95 range)
-      return { 
-        name: dayLabel, 
-        score: Math.floor(Math.random() * (95 - 75 + 1)) + 75 
-      };
-    });
-  }, [stats.healthScore]);
+    // Honest approach: Only show real data starting from today
+    return [
+      { name: 'Today', score: stats.healthScore }
+    ];
+  }, [stats.totalTables, stats.healthScore]);
 
   if (!mounted) return null;
 
@@ -195,47 +184,68 @@ export default function DashboardHome() {
             </div>
           </div>
 
-          <div className="h-[320px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }}
-                  dy={15}
-                />
-                <YAxis 
-                  domain={[0, 100]} 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }}
-                  dx={-10}
-                />
-                <Tooltip 
-                  cursor={{ stroke: '#e2e8f0', strokeWidth: 2 }}
-                  contentStyle={{ 
-                    borderRadius: '20px', 
-                    border: '1px solid #f1f5f9', 
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05)',
-                    padding: '16px',
-                    backgroundColor: '#ffffff'
-                  }}
-                  itemStyle={{ fontWeight: '900', color: '#064e3b', fontSize: '14px' }}
-                  labelStyle={{ fontWeight: 'bold', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' }}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="score" 
-                  stroke="#10b981" 
-                  strokeWidth={4} 
-                  dot={{ r: 4, fill: '#10b981', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, strokeWidth: 0 }}
-                  animationDuration={2000}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="h-[320px] w-full flex flex-col">
+            {chartData.length > 0 ? (
+              <>
+                <div className="flex-1 min-h-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData}>
+                      <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="#f1f5f9" />
+                      <XAxis 
+                        dataKey="name" 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }}
+                        dy={15}
+                      />
+                      <YAxis 
+                        domain={[0, 100]} 
+                        axisLine={false} 
+                        tickLine={false} 
+                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }}
+                        dx={-10}
+                      />
+                      <Tooltip 
+                        cursor={{ stroke: '#e2e8f0', strokeWidth: 2 }}
+                        contentStyle={{ 
+                          borderRadius: '20px', 
+                          border: '1px solid #f1f5f9', 
+                          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05)',
+                          padding: '16px',
+                          backgroundColor: '#ffffff'
+                        }}
+                        itemStyle={{ fontWeight: '900', color: '#064e3b', fontSize: '14px' }}
+                        labelStyle={{ fontWeight: 'bold', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.1em' }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="score" 
+                        stroke="#10b981" 
+                        strokeWidth={4} 
+                        dot={{ r: 6, fill: '#10b981', strokeWidth: 3, stroke: '#fff' }}
+                        activeDot={{ r: 8, strokeWidth: 0 }}
+                        animationDuration={1500}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">
+                    Historical tracking starts today
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
+                <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-200 mb-6 border border-slate-100">
+                  <Icon icon="lucide:line-chart" width="32" />
+                </div>
+                <h4 className="text-sm font-black text-slate-900 mb-2 uppercase tracking-tight">No health data yet</h4>
+                <p className="text-xs text-slate-400 font-medium leading-relaxed max-w-[240px]">
+                  Connect your OpenMetadata instance to start tracking data quality and documentation health.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
