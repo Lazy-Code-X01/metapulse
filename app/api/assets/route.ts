@@ -7,8 +7,16 @@ export async function GET(req: NextRequest) {
     const omUrl = searchParams.get('omUrl');
     const omToken = searchParams.get('omToken');
 
+    const rawUrl = req.headers.get('x-om-url') || omUrl || process.env.OPENMETADATA_BASE_URL || '';
+    const cleanUrl = rawUrl.endsWith('/') ? rawUrl.slice(0, -1) : rawUrl;
+    const baseURL = cleanUrl.includes('/api/v1') ? cleanUrl : `${cleanUrl}/api/v1`;
+
+    console.log('[Assets] x-om-url header:', req.headers.get('x-om-url'));
+    console.log('[Assets] x-om-token header exists:', !!req.headers.get('x-om-token'));
+    console.log('[Assets] final baseURL:', baseURL);
+
     const config = {
-      baseURL: req.headers.get('x-om-url') || omUrl || undefined,
+      baseURL,
       token: req.headers.get('x-om-token') || omToken || undefined,
     };
 

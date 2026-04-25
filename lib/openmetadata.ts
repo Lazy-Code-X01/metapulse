@@ -16,8 +16,11 @@ export interface OMConfig {
 }
 
 const createClient = (config?: OMConfig): AxiosInstance => {
-  const baseURL = config?.baseURL || process.env.OPENMETADATA_BASE_URL;
+  const rawUrl = config?.baseURL || process.env.OPENMETADATA_BASE_URL || '';
   const token = config?.token || process.env.OPENMETADATA_PAT;
+
+  const cleanUrl = rawUrl.endsWith('/') ? rawUrl.slice(0, -1) : rawUrl;
+  const baseURL = cleanUrl.includes('/api/v1') ? cleanUrl : `${cleanUrl}/api/v1`;
 
   if (!baseURL || !token) {
     throw new Error('Missing OpenMetadata credentials. Please complete onboarding.');
