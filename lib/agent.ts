@@ -102,6 +102,7 @@ export async function runIncidentAgent(input: AgentIncidentInput): Promise<Incid
       status: 'open',
       timestamp: new Date().toISOString(),
       assetName: input.assetName,
+      assetType: input.assetType,
       failureReason: input.failureReason,
       affectedAssets,
       owners,

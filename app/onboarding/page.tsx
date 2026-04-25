@@ -187,7 +187,7 @@ export default function OnboardingPage() {
             onClick={nextStep}
             className="flex items-center justify-center bg-emerald-500 hover:opacity-90 text-white px-12 py-5 rounded-2xl font-bold text-sm transition-all shadow-2xl shadow-emerald-500/20 active:scale-95"
           >
-            Let's Start
+            Let&apos;s Start
           </button>
         </div>
       )}

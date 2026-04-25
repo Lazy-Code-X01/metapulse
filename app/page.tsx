@@ -179,7 +179,7 @@ export default function LandingPage() {
               </div>
               <div className="p-3 bg-gray-50 rounded-xl mb-3 text-left">
                 <p className="text-[11px] text-gray-500 leading-tight">
-                  "Where is the revenue data? Who owns the orders table?"
+                  &quot;Where is the revenue data? Who owns the orders table?&quot;
                 </p>
               </div>
               <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-600">
@@ -221,7 +221,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <p className="text-[11px] font-bold text-emerald-800 text-left">
-                  Claude: "Downstream revenue tracking affected."
+                  Claude: &quot;Downstream revenue tracking affected.&quot;
                 </p>
               </div>
             </div>
