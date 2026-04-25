@@ -115,7 +115,6 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#fafafa] text-gray-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
       <CapsuleNav activeSection={activeSection} />
 
-
       <section className="relative pt-32 pb-16 px-6">
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-emerald-50/50 rounded-full blur-[120px] -z-10" />
 
@@ -142,7 +141,7 @@ export default function LandingPage() {
               disabled={isSimulating}
               className="group relative px-8 py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-[0_20px_40px_rgba(16,185,129,0.2)] hover:shadow-[0_25px_50px_rgba(16,185,129,0.35)] hover:-translate-y-1 transition-all active:scale-95 disabled:opacity-70 text-sm"
             >
-              {isSimulating ? 'Redirecting...' : 'Simulate Incident ->'}
+              {isSimulating ? 'Redirecting...' : 'Simulate Incident'}
             </button>
             <a
               href="https://metapulsedemo.slack.com/archives/C0ARC6C46V9"
@@ -158,7 +157,6 @@ export default function LandingPage() {
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-10 animate-in fade-in duration-1000 delay-500">
             Hackathon Judge’s Portal & Demo
           </p>
-
 
           <div className="relative w-full max-w-2xl h-[420px] mb-12 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500 fill-mode-both">
             {/* Card 1: Onboarding (Left Stack) */}
@@ -255,7 +253,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-
       <section id="features" className="py-20 px-6 bg-white">
         <div className="max-w-3xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4 text-left">
@@ -325,7 +322,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
 
       <footer className="relative bg-black text-white pt-24 pb-12 px-6 overflow-hidden rounded-t-[4rem] shadow-[0_-20px_60px_rgba(0,0,0,0.1)]">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
