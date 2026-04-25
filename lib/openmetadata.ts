@@ -95,9 +95,7 @@ export const searchAllAssets = async (
 export const getTableById = async (id: string, config?: OMConfig): Promise<OpenMetadataAsset | null> => {
   try {
     const client = createClient(config);
-    const response = await client.get(`/tables/${id}`, {
-      params: { fields: 'owner,description,columns' }
-    });
+    const response = await client.get(`/tables/${id}`);
     return response.data as OpenMetadataAsset;
   } catch (error) {
     console.error(`[OpenMetadata] getTableById failed for id ${id}:`, error);
@@ -109,7 +107,7 @@ export const listTables = async (limit: number = 20, config?: OMConfig): Promise
   try {
     const client = createClient(config);
     const response = await client.get('/tables', {
-      params: { limit, include: 'all', fields: 'owner,description' },
+      params: { limit, include: 'all' },
     });
     return (response.data?.data ?? []) as OpenMetadataAsset[];
   } catch (error) {
