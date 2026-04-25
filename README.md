@@ -28,7 +28,7 @@ they chat with MetaPulse and get:
 
 ## Demo
 🎥 Demo video: https://youtu.be/rrnvNoRuoD8
-🔴 Live demo: https://metapulse.vercel.app
+🔴 Live demo: https://metapulse-tau.vercel.app
 
 ## Tech Stack
 
