@@ -25,8 +25,13 @@ export async function POST(req: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
+    const config = {
+      baseURL: req.headers.get('x-om-url') || undefined,
+      token: req.headers.get('x-om-token') || undefined,
+    };
+
     // Call agent
-    const report = await runIncidentAgent(input);
+    const report = await runIncidentAgent(input, config);
 
     // Persist to in-memory store for dashboard polling
     addIncident(report);

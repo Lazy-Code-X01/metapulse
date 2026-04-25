@@ -10,12 +10,17 @@ import {
 
 
 
-const createClient = (config?: { baseURL?: string; token?: string }): AxiosInstance => {
+export interface OMConfig {
+  baseURL?: string;
+  token?: string;
+}
+
+const createClient = (config?: OMConfig): AxiosInstance => {
   const baseURL = config?.baseURL || process.env.OPENMETADATA_BASE_URL;
   const token = config?.token || process.env.OPENMETADATA_PAT;
 
   if (!baseURL || !token) {
-    throw new Error('Missing OPENMETADATA_BASE_URL or OPENMETADATA_PAT in environment variables');
+    throw new Error('Missing OpenMetadata credentials. Please complete onboarding.');
   }
 
   return axios.create({
@@ -33,10 +38,11 @@ const createClient = (config?: { baseURL?: string; token?: string }): AxiosInsta
 export const searchAssets = async (
   query: string,
   index: string = 'table_search_index',
-  limit: number = 10
+  limit: number = 10,
+  config?: OMConfig
 ): Promise<OpenMetadataAsset[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/search/query', {
       params: {
         q: query,
@@ -56,10 +62,11 @@ export const searchAssets = async (
 
 export const searchAllAssets = async (
   query: string,
-  limit: number = 10
+  limit: number = 10,
+  config?: OMConfig
 ): Promise<OpenMetadataAsset[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/search/query', {
       params: {
         q: query,
@@ -71,20 +78,20 @@ export const searchAllAssets = async (
     });
     const hits = response.data?.hits?.hits ?? [];
     if (hits.length === 0) {
-      return listTables(limit);
+      return listTables(limit, config);
     }
     return hits.map((hit: { _source: OpenMetadataAsset }) => hit._source);
   } catch (error) {
     console.error('[OpenMetadata] searchAllAssets failed:', error);
-    return listTables(limit);
+    return listTables(limit, config);
   }
 };
 
 
 
-export const getTableById = async (id: string): Promise<OpenMetadataAsset | null> => {
+export const getTableById = async (id: string, config?: OMConfig): Promise<OpenMetadataAsset | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/tables/${id}`, {
       params: { fields: 'owner,description,columns' }
     });
@@ -95,9 +102,9 @@ export const getTableById = async (id: string): Promise<OpenMetadataAsset | null
   }
 };
 
-export const listTables = async (limit: number = 20): Promise<OpenMetadataAsset[]> => {
+export const listTables = async (limit: number = 20, config?: OMConfig): Promise<OpenMetadataAsset[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/tables', {
       params: { limit, include: 'all', fields: 'owner,description' },
     });
@@ -114,10 +121,11 @@ export const getLineage = async (
   entityType: string,
   id: string,
   upstreamDepth: number = 2,
-  downstreamDepth: number = 2
+  downstreamDepth: number = 2,
+  config?: OMConfig
 ): Promise<LineageResponse | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/lineage/${entityType}/${id}`, {
       params: { upstreamDepth, downstreamDepth },
     });
@@ -132,10 +140,11 @@ export const getLineageByFQN = async (
   entityType: string,
   fqn: string,
   upstreamDepth: number = 2,
-  downstreamDepth: number = 2
+  downstreamDepth: number = 2,
+  config?: OMConfig
 ): Promise<LineageResponse | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/lineage/${entityType}/name/${fqn}`, {
       params: { upstreamDepth, downstreamDepth },
     });
@@ -148,9 +157,9 @@ export const getLineageByFQN = async (
 
 
 
-export const getTestCasesForAsset = async (entityFQN: string): Promise<DataQualityTestCase[]> => {
+export const getTestCasesForAsset = async (entityFQN: string, config?: OMConfig): Promise<DataQualityTestCase[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const entityLink = `<#E::table::${entityFQN}>`;
     const response = await client.get('/dataQuality/testCases', {
       params: {
@@ -166,16 +175,16 @@ export const getTestCasesForAsset = async (entityFQN: string): Promise<DataQuali
   }
 };
 
-export const getFailedTestCases = async (entityFQN: string): Promise<DataQualityTestCase[]> => {
-  const allTests = await getTestCasesForAsset(entityFQN);
+export const getFailedTestCases = async (entityFQN: string, config?: OMConfig): Promise<DataQualityTestCase[]> => {
+  const allTests = await getTestCasesForAsset(entityFQN, config);
   return allTests.filter((t) => t.testCaseResult?.testCaseStatus === 'Failed');
 };
 
 
 
-export const listTeams = async (): Promise<OpenMetadataTeam[]> => {
+export const listTeams = async (config?: OMConfig): Promise<OpenMetadataTeam[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/teams', {
       params: { limit: 50, include: 'all' },
     });
@@ -186,9 +195,9 @@ export const listTeams = async (): Promise<OpenMetadataTeam[]> => {
   }
 };
 
-export const getTeamByName = async (teamName: string): Promise<OpenMetadataTeam | null> => {
+export const getTeamByName = async (teamName: string, config?: OMConfig): Promise<OpenMetadataTeam | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/teams/name/${teamName}`, {
       params: { include: 'all' },
     });
@@ -199,9 +208,9 @@ export const getTeamByName = async (teamName: string): Promise<OpenMetadataTeam 
   }
 };
 
-export const getUsersByTeam = async (teamName: string): Promise<OpenMetadataUser[]> => {
+export const getUsersByTeam = async (teamName: string, config?: OMConfig): Promise<OpenMetadataUser[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/users', {
       params: { team: teamName, limit: 50, include: 'all' },
     });
@@ -212,9 +221,9 @@ export const getUsersByTeam = async (teamName: string): Promise<OpenMetadataUser
   }
 };
 
-export const getUserById = async (id: string): Promise<OpenMetadataUser | null> => {
+export const getUserById = async (id: string, config?: OMConfig): Promise<OpenMetadataUser | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/users/${id}`);
     return response.data as OpenMetadataUser;
   } catch (error) {
@@ -223,11 +232,9 @@ export const getUserById = async (id: string): Promise<OpenMetadataUser | null> 
   }
 };
 
-
-
-export const getPipelineById = async (id: string): Promise<OpenMetadataPipeline | null> => {
+export const getPipelineById = async (id: string, config?: OMConfig): Promise<OpenMetadataPipeline | null> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get(`/pipelines/${id}`);
     return response.data as OpenMetadataPipeline;
   } catch (error) {
@@ -236,9 +243,9 @@ export const getPipelineById = async (id: string): Promise<OpenMetadataPipeline 
   }
 };
 
-export const listPipelines = async (limit: number = 20): Promise<OpenMetadataPipeline[]> => {
+export const listPipelines = async (limit: number = 20, config?: OMConfig): Promise<OpenMetadataPipeline[]> => {
   try {
-    const client = createClient();
+    const client = createClient(config);
     const response = await client.get('/pipelines', {
       params: { limit, include: 'all' },
     });

@@ -52,9 +52,16 @@ export default function CopilotPage() {
         timestamp: m.timestamp,
       }));
 
+      const omUrl = localStorage.getItem('metapulse_om_url') || '';
+      const omToken = localStorage.getItem('metapulse_om_token') || '';
+
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-om-url': omUrl,
+          'x-om-token': omToken,
+        },
         body: JSON.stringify({
           userName: profile.userName,
           role: profile.role,
@@ -99,9 +106,16 @@ export default function CopilotPage() {
     setChatMessages([welcomeMsg]);
     setChatLoading(true);
 
+    const omUrl = localStorage.getItem('metapulse_om_url') || '';
+    const omToken = localStorage.getItem('metapulse_om_token') || '';
+
     fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-om-url': omUrl,
+        'x-om-token': omToken,
+      },
       body: JSON.stringify({
         userName: profile.userName,
         role: profile.role,

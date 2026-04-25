@@ -110,9 +110,16 @@ function IncidentsContent() {
     }
 
     try {
+      const omUrl = localStorage.getItem('metapulse_om_url') || '';
+      const omToken = localStorage.getItem('metapulse_om_token') || '';
+
       const res = await fetch('/api/incident', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-om-url': omUrl,
+          'x-om-token': omToken,
+        },
         body: JSON.stringify({
           assetId: '169c15c7-c42b-4c6e-8405-e418eba3f54c',
           assetName: 'orders',

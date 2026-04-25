@@ -11,6 +11,7 @@ import {
   searchAllAssets,
   getUsersByTeam,
   getTableById,
+  OMConfig,
 } from '@/lib/openmetadata';
 import {
   generateIncidentReport,
@@ -18,16 +19,19 @@ import {
 } from '@/lib/claude';
 import { sendSlackIncidentAlert } from '@/lib/notify';
 
-export async function runIncidentAgent(input: AgentIncidentInput): Promise<IncidentReport> {
+export async function runIncidentAgent(
+  input: AgentIncidentInput,
+  config?: OMConfig
+): Promise<IncidentReport> {
   try {
     // 1. Get lineage data
-    const lineage = await getLineage(input.assetType, input.assetId);
+    const lineage = await getLineage(input.assetType, input.assetId, 2, 2, config);
 
-    const tableDetails = await getTableById(input.assetId)
-    const tableOwner = tableDetails?.owner?.name || 'Unknown'
+    const tableDetails = await getTableById(input.assetId, config);
+    const tableOwner = tableDetails?.owner?.name || 'Unknown';
 
     // 2. Get quality failures
-    const testCases = await getTestCasesForAsset(input.assetName);
+    const testCases = await getTestCasesForAsset(input.assetName, config);
     const failedTests = testCases
       .filter((tc) => tc.testCaseResult?.testCaseStatus === 'Failed')
       .map((tc) => tc.name);
@@ -44,8 +48,8 @@ export async function runIncidentAgent(input: AgentIncidentInput): Promise<Incid
       for (const node of downstreamNodes) {
         downstreamImpact.push(node.name);
         try {
-          const details = await getTableById(node.id)
-          const ownerName = details?.owner?.name || 'Unknown'
+          const details = await getTableById(node.id, config);
+          const ownerName = details?.owner?.name || 'Unknown';
           
           if (ownerName !== 'Unknown') {
             affectedOwnersSet.add(ownerName)
@@ -118,13 +122,16 @@ export async function runIncidentAgent(input: AgentIncidentInput): Promise<Incid
   }
 }
 
-export async function runOnboardingAgent(input: AgentOnboardingInput): Promise<string> {
+export async function runOnboardingAgent(
+  input: AgentOnboardingInput,
+  config?: OMConfig
+): Promise<string> {
   try {
     // 1. Find relevant assets based on role
-    const assets = await searchAllAssets(input.role);
+    const assets = await searchAllAssets(input.role, 10, config);
 
     // 2. Find teammates
-    const users = await getUsersByTeam(input.team);
+    const users = await getUsersByTeam(input.team, config);
 
     // 3. Build context with Team members found
     const teamMembers = users.map((u) => `${u.name} (${u.email})`).join(', ');
@@ -140,7 +147,7 @@ export async function runOnboardingAgent(input: AgentOnboardingInput): Promise<s
     const enrichedAssets = await Promise.all(
       assets.slice(0, 5).map(async (asset) => {
         try {
-          const details = await getTableById(asset.id)
+          const details = await getTableById(asset.id, config);
           return {
             ...asset,
             owner: details?.owner || { name: 'Unknown', type: 'user', id: '0' },

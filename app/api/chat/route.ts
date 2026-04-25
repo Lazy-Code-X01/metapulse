@@ -24,8 +24,13 @@ export async function POST(req: NextRequest) {
       conversationHistory: conversationHistory || [],
     };
 
+    const config = {
+      baseURL: req.headers.get('x-om-url') || undefined,
+      token: req.headers.get('x-om-token') || undefined,
+    };
+
     // Call agent
-    const result = await runOnboardingAgent(input);
+    const result = await runOnboardingAgent(input, config);
 
     return NextResponse.json({ response: result }, { status: 200 });
   } catch (error) {

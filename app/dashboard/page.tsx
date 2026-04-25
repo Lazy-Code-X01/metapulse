@@ -52,8 +52,16 @@ export default function DashboardHome() {
 
     const fetchData = async () => {
       try {
+        const omUrl = localStorage.getItem('metapulse_om_url') || '';
+        const omToken = localStorage.getItem('metapulse_om_token') || '';
+
         // Fetch Assets
-        const assetRes = await fetch('/api/assets');
+        const assetRes = await fetch('/api/assets', {
+          headers: {
+            'x-om-url': omUrl,
+            'x-om-token': omToken,
+          },
+        });
         const assetData = await assetRes.json();
         if (assetData.tables) setAssets(assetData.tables);
 
