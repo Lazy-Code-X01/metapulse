@@ -323,7 +323,7 @@ export default function DashboardHome() {
           </div>
 
           <div className="space-y-3 flex-1">
-            {assets.slice(0, 6).map((asset) => (
+            {assets.slice(0, 4).map((asset) => (
               <div
                 key={asset.id}
                 className="flex items-center justify-between group p-3 hover:bg-slate-50 border border-transparent hover:border-slate-100 rounded-2xl transition-all cursor-pointer"
@@ -367,12 +367,12 @@ export default function DashboardHome() {
           </div>
 
           <a
-            href={localStorage.getItem('metapulse_om_url') || '#'}
+            href={`${localStorage.getItem('metapulse_om_url') || ''}/explore/tables`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 flex items-center justify-center gap-2 py-4 rounded-2xl bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95"
           >
-            See all data
+            View all {assets.length} tables →
             <Icon icon="lucide:external-link" width="14" />
           </a>
         </div>
