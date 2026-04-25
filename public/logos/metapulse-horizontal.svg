@@ -1,0 +1,18 @@
+<svg viewBox="0 0 280 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cyl" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#064e3b"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <path d="M0.0003 12L0 38C0.07 44.2 7.2 49 16 49C24.8 49 31.9 44.2 31.99 38L32 12C31.9 18.2 24.8 23 16 23C7.2 23 0.07 18.2 0.0003 12Z" fill="url(#cyl)"/>
+  <ellipse cx="16" cy="12" rx="16" ry="9.5" fill="#10b981"/>
+  <ellipse cx="16" cy="12" rx="9.5" ry="5.5" fill="#064e3b" opacity="0.4"/>
+  <path d="M3 34 L6.5 34 L8.5 28 L12 40 L15.5 24 L19 37 L21.5 34 L26 34"
+        stroke="white" stroke-width="1.8" stroke-linecap="round"
+        stroke-linejoin="round" fill="none"/>
+  <text x="44" y="36" font-family="system-ui,-apple-system,sans-serif"
+        font-size="28" font-weight="500" letter-spacing="-1" fill="#064e3b">Meta</text>
+  <text x="122" y="36" font-family="system-ui,-apple-system,sans-serif"
+        font-size="28" font-weight="500" letter-spacing="-1" fill="#10b981">Pulse</text>
+</svg>

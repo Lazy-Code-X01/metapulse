@@ -1,0 +1,14 @@
+<svg viewBox="17 13 23 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cylicon" x1="28.5" y1="20" x2="28.5" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10b981"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <path d="M18.0002 20L18 36C18.04 40 22.7 44 28.5 44C34.3 44 38.9 40 38.99 36L39 20C38.9 24 34.3 28 28.5 28C22.7 28 18.04 24 18.0002 20Z" fill="url(#cylicon)"/>
+  <ellipse cx="28.5" cy="20" rx="10.5" ry="6.2" fill="#34d399"/>
+  <ellipse cx="28.5" cy="20" rx="6" ry="3.5" fill="white" opacity="0.2"/>
+  <path d="M20.25 35 L22.75 35 L24.25 33 L26.75 37 L29.25 31 L31.75 36 L33.25 35 L36.75 35"
+        stroke="white" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" fill="none"/>
+</svg>
